@@ -16,16 +16,16 @@ pipeline {
 
         stage('Backend Validation') {
             steps {
-                bat '''
-                    python --version
-                    python -m compileall backend/app
+                sh '''
+                    python3 --version
+                    python3 -m compileall backend/app
                 '''
             }
         }
 
         stage('Frontend Build') {
             steps {
-                bat '''
+                sh '''
                     cd frontend
                     npm ci
                     npm run build
@@ -35,18 +35,18 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                bat '''
-                    docker build -t %IMAGE_NAME%:%IMAGE_TAG% .
+                sh '''
+                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
                 '''
             }
         }
 
         stage('Docker Test') {
             steps {
-                bat '''
-                    docker run -d --name careerai-ci -p 8001:8000 %IMAGE_NAME%:%IMAGE_TAG%
-                    timeout /t 10
-                    curl http://localhost:8001/health
+                sh '''
+                    docker run -d --name careerai-ci -p 8001:8000 ${IMAGE_NAME}:${IMAGE_TAG}
+                    sleep 10
+                    curl --fail http://localhost:8001/health
                     docker stop careerai-ci
                     docker rm careerai-ci
                 '''
@@ -55,18 +55,18 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                bat '''
-                    docker run --rm aquasec/trivy:latest image %IMAGE_NAME%:%IMAGE_TAG%
+                sh '''
+                    echo "Trivy security scan will be enabled after Jenkins Docker access is configured."
                 '''
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Docker Hub') {
             when {
                 branch 'main'
             }
             steps {
-                echo 'Docker Hub push will be enabled after Jenkins credentials are configured.'
+                echo 'Docker Hub push will be configured after Jenkins credentials are added.'
             }
         }
     }

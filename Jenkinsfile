@@ -41,17 +41,25 @@ pipeline {
             }
         }
 
-        stage('Docker Test') {
-            steps {
-                sh '''
-                    docker run -d --name careerai-ci -p 8001:8000 ${IMAGE_NAME}:${IMAGE_TAG}
-                    sleep 10
-                    curl --fail http://localhost:8001/health
-                    docker stop careerai-ci
-                    docker rm careerai-ci
-                '''
-            }
-        }
+       stage('Docker Test') {
+    steps {
+        sh '''
+            docker rm -f careerai-ci 2>/dev/null || true
+
+            docker run -d \
+                --name careerai-ci \
+                --network jenkins \
+                ${IMAGE_NAME}:${IMAGE_TAG}
+
+            sleep 10
+
+            curl --fail http://careerai-ci:8000/health
+
+            docker stop careerai-ci
+            docker rm careerai-ci
+        '''
+    }
+}
 
         stage('Security Scan') {
             steps {

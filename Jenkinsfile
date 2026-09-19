@@ -62,12 +62,19 @@ pipeline {
 }
 
         stage('Security Scan') {
-            steps {
-                sh '''
-                    echo "Trivy security scan will be enabled after Jenkins Docker access is configured."
-                '''
-            }
-        }
+    steps {
+        sh '''
+            docker run --rm \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              aquasec/trivy:latest \
+              image \
+              --scanners vuln \
+              --severity HIGH,CRITICAL \
+              --exit-code 1 \
+              ${IMAGE_NAME}:${IMAGE_TAG}
+        '''
+    }
+}
 
         stage('Docker Hub') {
             when {

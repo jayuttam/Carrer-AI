@@ -77,14 +77,27 @@ pipeline {
 }
 
         stage('Docker Hub') {
-            when {
-                branch 'main'
-            }
-            steps {
-                echo 'Docker Hub push will be configured after Jenkins credentials are added.'
-            }
+    when {
+        branch 'main'
+    }
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'dockerhub-creds',
+                usernameVariable: 'DOCKER_USERNAME',
+                passwordVariable: 'DOCKER_PASSWORD'
+            )
+        ]) {
+            sh '''
+                echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+                docker push ${IMAGE_NAME}:${IMAGE_TAG}
+
+                docker logout
+            '''
         }
     }
+}
 
     post {
         always {

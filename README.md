@@ -1,759 +1,427 @@
-# 🚀 CareerAI — AI-Powered Student Placement & Career Readiness Platform
+CareerAI
 
-CareerAI is a full-stack AI/ML application designed to help students understand their placement readiness through **machine-learning-based placement prediction, skill analysis, and personalized improvement recommendations**.
+CareerAI is a full-stack AI-powered student placement and career guidance platform. It combines a machine-learning placement prediction model with skill-gap analysis, career-role recommendations, and learning recommendations.
 
-The project uses the **Indian Student Placement Dataset 2025** from Kaggle and combines a Python ML pipeline with a FastAPI backend and React + TypeScript frontend.
+Features
 
----
+Student assessment form
 
-## 🎯 Problem Statement
+Placement prediction using a trained Random Forest model
 
-Students often have difficulty understanding how their academic performance, technical skills, internships, certifications, and aptitude performance affect their placement readiness.
+Placement probability and status
 
-CareerAI provides a data-driven approach by analyzing student attributes and predicting whether a student is likely to be placed.
+Skill-gap analysis
 
-The platform also provides actionable recommendations based on the student's profile to help improve their career readiness.
+Career-role recommendations
 
----
+Personalized learning recommendations
 
-## ✨ Key Features
+Interactive dashboard
 
-### 🤖 Placement Prediction
+React + TypeScript frontend
 
-A Machine Learning classification model predicts whether a student is likely to be placed based on their profile.
+FastAPI backend
 
-The prediction uses features such as:
+REST API integration using Axios
 
-* CGPA
-* Backlogs
-* Internships
-* Certifications
-* Coding skills
-* Communication skills
-* Aptitude score
-* Projects
-* Degree
-* Branch
-* Age
-* Gender
+Local persistence of assessment data using browser localStorage
 
-### 📊 Placement Probability
+Tech Stack
 
-The trained model can provide a probability score along with the predicted placement status.
+Frontend
 
-Example:
+React
 
-```text
-Placement Probability: 82%
+TypeScript
 
-Prediction: Likely Placed
-```
+Vite
 
-> **Note:** The probability is a model output and should not be interpreted as a guarantee of actual placement.
+React Router
 
----
+Axios
 
-### 🧠 Skill Gap Analysis
+Recharts
 
-CareerAI analyzes a student's profile and identifies areas that may require improvement.
+Lucide React
 
-Example:
+CSS
 
-```text
-Skill Analysis
+Backend
 
-Coding Skills          8/10
-Communication Skills   6/10
-Aptitude Score         72/100
-Projects               2
-Internships            1
-```
+Python
 
----
+FastAPI
 
-### 🎯 Personalized Recommendations
+Pydantic
 
-The recommendation engine generates improvement suggestions based on the student's profile.
+Uvicorn
 
-Example:
+Scikit-learn
 
-```text
-Recommended Improvements
+Joblib
 
-1. Improve Data Structures & Algorithms
-2. Strengthen SQL fundamentals
-3. Build more practical projects
-4. Improve aptitude performance
-5. Gain internship experience
-```
+Machine Learning
 
----
+The placement prediction model is a trained RandomForestClassifier pipeline.
 
-### 📈 Interactive Dashboard
+The model uses:
 
-The React dashboard displays:
+Age
 
-* Placement prediction
-* Placement probability
-* Academic profile
-* Technical skills
-* Aptitude performance
-* Internship experience
-* Certifications
-* Projects
-* Improvement recommendations
-
----
-
-### 🌐 REST API
-
-FastAPI provides REST APIs for:
-
-* Student assessment
-* Placement prediction
-* Student profile
-* Recommendations
-* Health/status monitoring
-
-Interactive API documentation is automatically generated using Swagger/OpenAPI.
-
----
-
-## 🏗️ System Architecture
-
-```text
-                    ┌─────────────────────────┐
-                    │      React + TS         │
-                    │      Frontend           │
-                    └────────────┬────────────┘
-                                 │
-                              REST API
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │        FastAPI          │
-                    │        Backend          │
-                    └────────────┬────────────┘
-                                 │
-                ┌────────────────┼────────────────┐
-                │                │                │
-                ▼                ▼                ▼
-        ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-        │ ML Prediction│ │Recommendation│ │   MongoDB    │
-        │   Service    │ │   Service    │ │   Database   │
-        └──────┬───────┘ └──────────────┘ └──────────────┘
-               │
-               ▼
-        ┌─────────────────┐
-        │ Scikit-learn ML │
-        │      Model      │
-        └─────────────────┘
-```
-
----
-
-# 📊 Dataset
-
-### Indian Student Placement Dataset 2025
-
-The project uses the Kaggle dataset:
-
-```text
-Indian_Student_Placement_Dataset_2025.csv
-```
-
-### Dataset Size
-
-```text
-Rows:    12,000
-Columns: 16
-```
-
-### Dataset Features
-
-| Feature                | Description                        |
-| ---------------------- | ---------------------------------- |
-| `student_id`           | Unique student identifier          |
-| `gender`               | Student gender                     |
-| `age`                  | Student age                        |
-| `degree`               | Degree type                        |
-| `branch`               | Academic branch                    |
-| `cgpa`                 | CGPA                               |
-| `backlogs`             | Number of backlogs                 |
-| `internships`          | Number of internships              |
-| `certifications`       | Number of certifications           |
-| `coding_skills`        | Coding skill score                 |
-| `communication_skills` | Communication skill score          |
-| `aptitude_score`       | Aptitude score                     |
-| `projects`             | Number of projects                 |
-| `placed`               | Placement status — target variable |
-| `company_type`         | Company category                   |
-| `package_lpa`          | Placement package in LPA           |
-
----
-
-## ⚠️ Data Leakage Prevention
-
-The target variable is:
-
-```text
-placed
-```
-
-The model does **not** use post-placement information such as:
-
-```text
-company_type
-package_lpa
-```
-
-as input features.
-
-This prevents **data leakage**, because these values are only available after a placement outcome is known.
-
-The `student_id` field is also excluded from model training because it is an identifier rather than a meaningful predictive feature.
-
----
-
-# 🧠 Machine Learning Pipeline
-
-```text
-                 Dataset
-                    │
-                    ▼
-             Data Validation
-                    │
-                    ▼
-              Data Cleaning
-                    │
-                    ▼
-        Exploratory Data Analysis
-                    │
-                    ▼
-        Feature Preprocessing
-                    │
-                    ▼
-          Train / Test Split
-                    │
-                    ▼
-            Model Training
-                    │
-          ┌─────────┼─────────┐
-          ▼         ▼         ▼
-      Logistic   Random    Gradient
-     Regression  Forest    Boosting
-          │         │         │
-          └─────────┼─────────┘
-                    ▼
-             Model Evaluation
-                    │
-                    ▼
-             Best Model
-                    │
-                    ▼
-            Joblib Serialization
-                    │
-                    ▼
-             FastAPI Inference
-```
-
-### Candidate Models
-
-The project can compare:
-
-* Logistic Regression
-* Decision Tree
-* Random Forest
-* Gradient Boosting
-* XGBoost
-
-Model selection is based on validation performance rather than simply choosing the model with the highest training accuracy.
-
----
-
-# 🛠️ Technology Stack
-
-## Frontend
-
-| Technology   | Purpose                  |
-| ------------ | ------------------------ |
-| React        | User interface           |
-| TypeScript   | Type-safe development    |
-| Tailwind CSS | UI styling               |
-| Recharts     | Charts and visualization |
-| Axios        | API communication        |
-
-## Backend
-
-| Technology | Purpose            |
-| ---------- | ------------------ |
-| Python     | Backend and ML     |
-| FastAPI    | REST API           |
-| Pydantic   | Request validation |
-| Uvicorn    | ASGI server        |
-
-## Machine Learning
-
-| Technology   | Purpose               |
-| ------------ | --------------------- |
-| Pandas       | Data processing       |
-| NumPy        | Numerical computation |
-| Scikit-learn | Machine Learning      |
-| XGBoost      | Gradient boosting     |
-| Joblib       | Model serialization   |
-
-## Database
-
-```text
-MongoDB
-```
-
-## Development
-
-```text
-Git
-GitHub
-VS Code
-Jupyter Notebook
-Docker
-```
-
----
-
-# 📂 Project Structure
-
-```text
-CareerAI/
+Degree
+
+Branch
+
+CGPA
+
+Backlogs
+
+Internships
+
+Certifications
+
+Coding skills
+
+Communication skills
+
+Aptitude score
+
+Projects
+
+Post-placement/leakage-prone fields such as company type and package are not used as prediction inputs.
+
+Project Structure
+
+CarrerAI/
 │
 ├── backend/
 │   ├── app/
 │   │   ├── main.py
-│   │   ├── config.py
-│   │   │
 │   │   ├── routes/
 │   │   │   ├── prediction.py
-│   │   │   ├── recommendation.py
-│   │   │   └── student.py
-│   │   │
+│   │   │   └── recommendation.py
 │   │   ├── schemas/
-│   │   │   └── student.py
-│   │   │
-│   │   ├── services/
-│   │   │   ├── prediction_service.py
-│   │   │   └── recommendation_service.py
-│   │   │
-│   │   └── ml/
-│   │       ├── placement_model.joblib
-│   │       ├── preprocess.py
-│   │       └── predict.py
+│   │   │   ├── student.py
+│   │   │   └── recommendation.py
+│   │   └── services/
+│   │       ├── prediction_services.py
+│   │       └── recommendation_service.py
 │   │
-│   ├── requirements.txt
-│   └── Dockerfile
+│   ├── ml/
+│   │   └── final_placement_model.joblib
+│   │
+│   └── requirements.txt
 │
 ├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Navbar.tsx
-│   │   │   ├── PredictionCard.tsx
-│   │   │   ├── SkillCard.tsx
-│   │   │   └── RecommendationCard.tsx
-│   │   │
-│   │   ├── pages/
-│   │   │   ├── Dashboard.tsx
-│   │   │   └── Assessment.tsx
-│   │   │
-│   │   ├── services/
-│   │   │   └── api.ts
-│   │   │
-│   │   ├── types/
-│   │   │   └── student.ts
-│   │   │
-│   │   └── App.tsx
-│   │
-│   ├── package.json
-│   └── Dockerfile
+│   └── frontend/
+│       ├── public/
+│       ├── src/
+│       │   ├── pages/
+│       │   │   ├── Assessment.tsx
+│       │   │   ├── Assessment.css
+│       │   │   ├── Dashboard.tsx
+│       │   │   └── Dashboard.css
+│       │   ├── services/
+│       │   │   └── api.ts
+│       │   ├── types/
+│       │   │   └── student.ts
+│       │   ├── App.tsx
+│       │   └── main.tsx
+│       ├── package.json
+│       └── vite.config.ts
 │
-├── dataset/
-│   └── Indian_Student_Placement_Dataset_2025.csv
-│
-├── notebooks/
-│   ├── 01_eda.ipynb
-│   └── 02_model_training.ipynb
-│
-├── tests/
-│   ├── test_prediction.py
-│   └── test_api.py
-│
-├── docker-compose.yml
-├── .env.example
-├── .gitignore
 └── README.md
-```
 
----
+How It Works
 
-# 🔌 API Endpoints
+Student Assessment
+        │
+        ▼
+React Frontend
+        │
+        │ Axios
+        ▼
+FastAPI Backend
+        │
+        ├──────────────► Random Forest Model
+        │                       │
+        │                       ▼
+        │                Placement Prediction
+        │
+        └──────────────► Recommendation Service
+                                │
+                                ├── Skill Gaps
+                                ├── Career Roles
+                                └── Learning Recommendations
+                                        │
+                                        ▼
+                                  React Dashboard
 
-## Health Check
+Machine Learning Model
 
-```http
-GET /
-```
+The project uses a pre-trained Random Forest classification pipeline stored at:
 
-Example response:
+backend/ml/final_placement_model.joblib
 
-```json
-{
-  "message": "CareerAI API is running"
-}
-```
+The pipeline handles preprocessing and prediction. The target variable is:
 
----
+placed
 
-## Placement Prediction
+The model returns a placement prediction and placement probability.
 
-```http
-POST /predict
-```
+The placement model predicts placement probability. It does not directly predict a student's job role.
 
-### Request
+Recommendation System
 
-```json
-{
-  "gender": "Male",
-  "age": 22,
-  "degree": "B.Tech",
-  "branch": "CSE",
-  "cgpa": 8.4,
-  "backlogs": 0,
-  "internships": 2,
-  "certifications": 4,
-  "coding_skills": 8,
-  "communication_skills": 7,
-  "aptitude_score": 82,
-  "projects": 3
-}
-```
+CareerAI currently uses a rule-based recommendation layer.
 
-### Response
+It generates:
 
-```json
-{
-  "placement_probability": 0.82,
-  "prediction": "Likely Placed"
-}
-```
+Skill Gaps
 
----
+The system compares the student's current values against predefined targets for:
 
-## Recommendations
+Coding
 
-```http
-POST /recommendations
-```
+Communication
 
-Example response:
+Aptitude
 
-```json
-{
-  "skill_gaps": [
-    "Data Structures & Algorithms",
-    "SQL",
-    "Communication"
-  ],
-  "recommendations": [
-    "Practice DSA regularly",
-    "Complete SQL projects",
-    "Improve communication skills"
-  ]
-}
-```
+Projects
 
----
+Internship Experience
 
-# ⚙️ Installation
+Certifications
 
-## 1. Clone Repository
+Career Roles
 
-```bash
-git clone https://github.com/YOUR_USERNAME/CareerAI.git
+Based on the student's assessment profile, the system can recommend roles such as:
 
-cd CareerAI
-```
+Software Developer
 
----
+Full Stack Developer
 
-# 🐍 Backend Setup
+Backend Developer
 
-```bash
+Data / Software Engineer
+
+Technology Analyst
+
+Web Developer
+
+Data Analyst
+
+These are recommendation rules, not predictions from the placement ML model.
+
+Learning Recommendations
+
+The system can recommend areas such as:
+
+Programming fundamentals
+
+Data Structures and Algorithms
+
+Spoken English and technical communication
+
+Quantitative aptitude
+
+Logical reasoning
+
+Projects
+
+Internship/open-source experience
+
+SQL and database fundamentals
+
+Backend API
+
+Start the backend and visit:
+
+http://127.0.0.1:8000
+
+Health Check
+
+GET /health
+
+Placement Prediction
+
+POST /api/predict
+
+Recommendations
+
+POST /api/recommendations
+
+FastAPI interactive API documentation:
+
+http://127.0.0.1:8000/docs
+
+Running the Project Locally
+
+1. Clone the Repository
+
+git clone https://github.com/jayuttam/Carrer-AI.git
+cd Carrer-AI
+
+2. Start the Backend
+
+Open a terminal:
+
 cd backend
-```
-
-Create a virtual environment:
-
-```bash
 python -m venv venv
-```
 
-Windows:
+Activate the virtual environment on Windows PowerShell:
 
-```bash
-venv\Scripts\activate
-```
+.\venv\Scripts\Activate.ps1
 
 Install dependencies:
 
-```bash
 pip install -r requirements.txt
-```
 
----
+Start FastAPI:
 
-## 🔑 Environment Variables
-
-Create:
-
-```text
-.env
-```
-
-Example:
-
-```env
-MONGO_URI=your_mongodb_connection_string
-SECRET_KEY=your_secret_key
-```
-
-Never commit `.env` to GitHub.
-
----
-
-# ▶️ Run Backend
-
-```bash
 uvicorn app.main:app --reload
-```
 
-API:
+Backend will run at:
 
-```text
 http://127.0.0.1:8000
-```
 
-Swagger documentation:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
----
-
-# ⚛️ Frontend Setup
+3. Start the Frontend
 
 Open another terminal:
 
-```bash
-cd frontend
-```
-
-Install dependencies:
-
-```bash
+cd frontend/frontend
 npm install
-```
-
-Run development server:
-
-```bash
 npm run dev
-```
 
-Frontend:
+Open the Vite development URL shown in the terminal, normally:
 
-```text
 http://localhost:5173
-```
 
----
+Frontend Routes
 
-# 🐳 Docker
+Route
 
-Build and start the application:
+Purpose
 
-```bash
-docker-compose up --build
-```
+/
 
-Stop:
+Student assessment
 
-```bash
-docker-compose down
-```
+/dashboard
 
----
+Placement and career dashboard
 
-# 🔄 Application Workflow
+API Integration
 
-```text
-Student
-   │
-   ▼
-Enter Academic & Skill Information
-   │
-   ▼
-React Frontend
-   │
-   ▼
-FastAPI REST API
-   │
-   ▼
-Input Validation
-   │
-   ▼
-ML Preprocessing
-   │
-   ▼
-Placement Prediction
-   │
-   ├──────────────► Probability
-   │
-   └──────────────► Prediction
-   │
-   ▼
-Skill Analysis
-   │
-   ▼
-Recommendations
-   │
-   ▼
-CareerAI Dashboard
-```
+The frontend communicates with FastAPI through Axios.
 
----
+The API base URL is currently:
 
-# 🧪 Testing
+http://127.0.0.1:8000/api
 
-API testing can be performed using:
+The main API functions are:
 
-* FastAPI Swagger
-* Postman
-* Pytest
+predictPlacement()
+getRecommendations()
 
-Run tests:
+Data Flow
 
-```bash
-pytest
-```
+Student enters assessment information.
 
----
+React validates and submits the assessment.
 
-# 🔐 Security
+Axios sends the data to FastAPI.
 
-The application follows basic security practices including:
+FastAPI sends the input through the trained ML pipeline.
 
-* Input validation using Pydantic
-* Environment variables for secrets
-* Protected configuration
-* Secure database credentials
-* `.env` excluded from Git
-* Validation before ML inference
+The backend returns placement prediction and probability.
 
----
+The recommendation service calculates skill gaps and career recommendations.
 
-# 🚀 Future Enhancements
+Results are displayed on the dashboard.
 
-* [ ] Resume parsing using NLP
-* [ ] Job-role recommendation system
-* [ ] Resume scoring
-* [ ] AI career assistant
-* [ ] Interview preparation
-* [ ] Job description matching
-* [ ] Skill extraction from resumes
-* [ ] Admin analytics dashboard
-* [ ] Cloud deployment
-* [ ] CI/CD pipeline
-* [ ] Model monitoring
-* [ ] Model retraining pipeline
+Assessment data and prediction results are temporarily stored in browser localStorage.
 
----
+Current Status
 
-# 🎓 Skills Demonstrated
+Completed
 
-This project demonstrates practical experience in:
+React frontend setup
 
-```text
-Python
-        │
-        ├── Machine Learning
-        ├── Data Processing
-        └── FastAPI
+Student assessment page
 
-TypeScript
-        │
-        └── React
+FastAPI backend
 
-Database
-        │
-        └── MongoDB
+Placement prediction API
 
-Engineering
-        │
-        ├── REST APIs
-        ├── Modular Architecture
-        ├── Validation
-        ├── Testing
-        ├── Docker
-        └── Git/GitHub
-```
+Trained Random Forest model integration
 
----
+Axios frontend-backend integration
 
-# 💡 Project Highlights
+Dashboard
 
-CareerAI is designed as an **end-to-end production-style application**, rather than a standalone machine-learning notebook.
+Skill-gap analysis
 
-The complete workflow is:
+Career-role recommendation layer
 
-```text
-Dataset
-   ↓
-Data Analysis
-   ↓
-Machine Learning
-   ↓
-Model Serialization
-   ↓
-FastAPI
-   ↓
-REST API
-   ↓
-React + TypeScript
-   ↓
-Interactive Dashboard
-```
+Learning recommendations
 
-This demonstrates the integration of **AI/ML with modern full-stack software development**.
+React routing
 
----
+GitHub repository setup
 
-# 👨‍💻 Author
+Planned Improvements
 
-**Jay**
+More interactive dashboard components
 
-B.Tech — Computer Science & Engineering
+Personalized learning roadmap with progress tracking
 
-### Areas of Interest
+More detailed skill analytics
 
-* Software Development
-* Full Stack Development
-* Python
-* Machine Learning
-* Data Science
-* Backend Development
-* Cloud & DevOps
+Improved career recommendation engine
 
----
+User authentication
 
-# 📄 License
+Database integration
 
-This project is developed for educational and portfolio purposes.
+Student profile persistence
+
+Deployment
+
+Automated testing
+
+Production configuration
+
+Important Notes
+
+The current recommendation engine is rule-based.
+
+The placement model is a classification model and should not be interpreted as a guarantee of placement.
+
+LocalStorage is currently used for temporary client-side persistence.
+
+The application is currently configured for local development.
+
+Future Vision
+
+CareerAI is intended to evolve into a complete student career-support platform where students can:
+
+Assess Skills
+     ↓
+Predict Placement Readiness
+     ↓
+Identify Skill Gaps
+     ↓
+Explore Suitable Career Roles
+     ↓
+Follow a Personalized Learning Roadmap
+     ↓
+Track Progress
+     ↓
+Improve Placement Readiness
+
+Author
+
+Jay Uttam
+
+B.Tech Computer Science & Engineering
